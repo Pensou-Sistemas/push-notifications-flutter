@@ -1,7 +1,7 @@
 library pusher_beams_platform_interface;
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart';
+import 'method_channel_pusher_beams.dart';
 
 typedef OnUserCallback = Function(String? error);
 typedef OnInterestsChange = Function(List<String?> interests);

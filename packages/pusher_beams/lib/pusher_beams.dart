@@ -5,8 +5,7 @@ import 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart
 import 'package:pusher_beams_platform_interface/pusher_beams_platform_interface.dart';
 import 'package:uuid/uuid.dart';
 
-export 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart'
-    show BeamsAuthProvider;
+export 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart' show BeamsAuthProvider;
 
 const _uuid = Uuid();
 
@@ -234,16 +233,14 @@ class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
   ///
   /// Throws an [Exception] in case of failure.
   @override
-  Future<void> setUserId(String userId, BeamsAuthProvider provider,
-      OnUserCallback callback) async {
+  Future<void> setUserId(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
     final callbackId = _uuid.v4();
 
     if (!kIsWeb) {
       _callbacks[callbackId] = callback;
     }
 
-    await _pusherBeamsApi.setUserId(
-        userId, provider, kIsWeb ? callback : callbackId);
+    await _pusherBeamsApi.setUserId(userId, provider, kIsWeb ? callback : callbackId);
   }
 
   /// This function register this device to *Pusher Beams* service with the given [instanceId].
@@ -262,7 +259,7 @@ class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
   /// Throws an [Exception] in case of failure.
   @override
   Future<void> start(String instanceId) async {
-    await _pusherBeamsApi.start(UuidValue(instanceId).toString());
+    await _pusherBeamsApi.start(UuidValue.fromString(instanceId));
   }
 
   /// Stops by deleting all the state, remotely and locally.
@@ -307,16 +304,14 @@ class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
   /// Throws an [Exception] in case of failure.
 
   @override
-  Future<void> onMessageReceivedInTheForeground(
-      OnMessageReceivedInTheForeground callback) async {
+  Future<void> onMessageReceivedInTheForeground(OnMessageReceivedInTheForeground callback) async {
     final callbackId = _uuid.v4();
 
     if (!kIsWeb) {
       _callbacks[callbackId] = callback;
     }
 
-    await _pusherBeamsApi
-        .onMessageReceivedInTheForeground(kIsWeb ? callback : callbackId);
+    await _pusherBeamsApi.onMessageReceivedInTheForeground(kIsWeb ? callback : callbackId);
   }
 
   /// Handler which receives callbacks from the native platforms.

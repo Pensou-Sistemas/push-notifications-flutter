@@ -4,8 +4,9 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js_util.dart';
 import 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart';
 import 'package:pusher_beams_platform_interface/pusher_beams_platform_interface.dart';
-import 'package:pusher_beams_web/pusher_beams.dart';
 import 'package:uuid/uuid.dart';
+
+import 'pusher_beams.dart';
 
 const uuid = Uuid();
 
@@ -111,9 +112,9 @@ class PusherBeams extends PusherBeamsPlatform {
   /// Throws [NullRejectionException] or [Exception] in case the JS promise fails.
   @override
   Future<void> start(String instanceId) async {
-    final instanceUuid = UuidValue(instanceId).toString();
+    final instanceUuid = UuidValue.fromString(instanceId);
 
-    _beamsClient ??= PusherBeamsClient(PusherBeamsClientOptions(instanceId: instanceUuid));
+    _beamsClient ??= PusherBeamsClient(PusherBeamsClientOptions(instanceId: instanceUuid.toString()));
 
     await promiseToFuture(_beamsClient!.start());
   }
