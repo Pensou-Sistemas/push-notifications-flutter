@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -32,17 +31,13 @@ void main() {
   });
 
   group('$PusherBeamsApi', () {
-    print(
-        'Pigeon Generated Platform API not tested in favor of integration tests');
+    print('Pigeon Generated Platform API not tested in favor of integration tests');
   });
 }
 
-class PusherBeamsPlatformMock extends Mock
-    with MockPlatformInterfaceMixin
-    implements PusherBeamsPlatform {}
+class PusherBeamsPlatformMock extends Mock with MockPlatformInterfaceMixin implements PusherBeamsPlatform {}
 
-class ImplementsPusherBeamsPlatform extends Mock
-    implements PusherBeamsPlatform {}
+class ImplementsPusherBeamsPlatform extends Mock implements PusherBeamsPlatform {}
 
 class IllegalImplementation extends PusherBeamsPlatform {
   @override
@@ -81,8 +76,7 @@ class IllegalImplementation extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> setUserId(
-      String userId, BeamsAuthProvider provider, OnUserCallback callback) {
+  Future<void> setUserId(String userId, BeamsAuthProvider provider, OnUserCallback callback) {
     throw UnimplementedError();
   }
 
