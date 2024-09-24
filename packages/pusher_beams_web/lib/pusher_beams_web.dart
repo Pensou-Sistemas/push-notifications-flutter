@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html' as html;
 
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js_util.dart';
@@ -51,8 +50,7 @@ class PusherBeams extends PusherBeamsPlatform {
   /// Throws [NullRejectionException] or [Exception] in case the JS promise fails.
   @override
   Future<List<String?>> getDeviceInterests() async {
-    final List<dynamic> interests =
-        await promiseToFuture(_beamsClient!.getDeviceInterests());
+    final List<dynamic> interests = await promiseToFuture(_beamsClient!.getDeviceInterests());
 
     return interests.cast<String?>();
   }
@@ -83,8 +81,7 @@ class PusherBeams extends PusherBeamsPlatform {
   /// You must create a [BeamsAuthProvider] in order to pass the [provider] argument.
   /// Throws [NullRejectionException] or [Exception] in case the JS promise fails.
   @override
-  Future<void> setUserId(String userId, BeamsAuthProvider provider,
-      OnUserCallback callback) async {
+  Future<void> setUserId(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
     try {
       final TokenProvider tokenProvider = TokenProvider(TokenProviderOptions(
           url: provider.authUrl!,
@@ -116,8 +113,7 @@ class PusherBeams extends PusherBeamsPlatform {
   Future<void> start(String instanceId) async {
     final instanceUuid = UuidValue(instanceId).toString();
 
-    _beamsClient ??=
-        PusherBeamsClient(PusherBeamsClientOptions(instanceId: instanceUuid));
+    _beamsClient ??= PusherBeamsClient(PusherBeamsClientOptions(instanceId: instanceUuid));
 
     await promiseToFuture(_beamsClient!.start());
   }
@@ -132,8 +128,7 @@ class PusherBeams extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onMessageReceivedInTheForeground(
-      OnMessageReceivedInTheForeground callback) async {
+  Future<void> onMessageReceivedInTheForeground(OnMessageReceivedInTheForeground callback) async {
     // Currently, we're not supporting foreground incoming message handling due to
     // platform limitations on communication between Web Service Workers and Flutter ecossystem
     return;
