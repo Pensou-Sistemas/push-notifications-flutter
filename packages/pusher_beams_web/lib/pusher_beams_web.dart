@@ -112,7 +112,7 @@ class PusherBeams extends PusherBeamsPlatform {
   /// Throws [NullRejectionException] or [Exception] in case the JS promise fails.
   @override
   Future<void> start(String instanceId) async {
-    final instanceUuid = UuidValue.fromString(instanceId);
+    final instanceUuid = UuidValue.fromString(instanceId).uuid;
 
     _beamsClient ??= PusherBeamsClient(PusherBeamsClientOptions(instanceId: instanceUuid.toString()));
 

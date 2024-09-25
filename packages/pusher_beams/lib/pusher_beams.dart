@@ -259,7 +259,7 @@ class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
   /// Throws an [Exception] in case of failure.
   @override
   Future<void> start(String instanceId) async {
-    await _pusherBeamsApi.start(UuidValue.fromString(instanceId));
+    await _pusherBeamsApi.start(UuidValue.fromString(instanceId).uuid);
   }
 
   /// Stops by deleting all the state, remotely and locally.
