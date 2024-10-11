@@ -184,11 +184,9 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
                     print("SwiftPusherBeamsPlugin: Dados da notificação recebidos: \(data)")
                 }
                 
-                if (SwiftPusherBeamsPlugin.callbackHandler != nil) {
-                    SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId(messageDidReceiveInTheBackgroundCallback, callbackName: "onMessageReceivedInTheBackground", args: [pusherMessage], completion: {_ in
-                        print("SwiftPusherBeamsPlugin: Notificação enviada ao Flutter: \(pusherMessage)")
-                    })
-                }   
+                SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId(messageDidReceiveInTheBackgroundCallback!, callbackName: "onMessageReceivedInTheBackground", args: [pusherMessage], completion: {_ in
+                    print("SwiftPusherBeamsPlugin: Notificação enviada ao Flutter: \(pusherMessage)")
+                })
             } else if (actionIdentifier == UNNotificationDismissActionIdentifier) {
                 print("SwiftPusherBeamsPlugin: Notificação fechada pelo usuário.")
             } else {
