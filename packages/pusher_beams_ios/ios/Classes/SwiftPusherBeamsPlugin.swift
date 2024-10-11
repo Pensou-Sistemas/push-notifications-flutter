@@ -146,6 +146,10 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
         messageDidReceiveInTheForegroundCallback = callbackId
     }
     
+    public func onMessageReceived(inTheBackgroundCallbackId callbackId: String, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
+        messageDidReceiveInTheBackgroundCallback = callbackId
+    }
+    
     public override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         if (messageDidReceiveInTheForegroundCallback != nil && SwiftPusherBeamsPlugin.callbackHandler != nil) {
             let pusherMessage: [String : Any] = [
@@ -161,34 +165,37 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
     }
 
     public override func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
-        let actionIdentifier = response.actionIdentifier
+  
+        if (messageDidReceiveInTheBackgroundCallback != nil && SwiftPusherBeamsPlugin.callbackHandler != nil) {
+            let userInfo = response.notification.request.content.userInfo
+            let actionIdentifier = response.actionIdentifier
 
-        if (actionIdentifier == UNNotificationDefaultActionIdentifier) {
-            print("SwiftPusherBeamsPlugin: Notificação aberta pelo usuário.")
+            if (actionIdentifier == UNNotificationDefaultActionIdentifier) {
+                print("SwiftPusherBeamsPlugin: Notificação aberta pelo usuário.")
 
-            var pusherMessage: [String : Any] = [
-                "action": actionIdentifier,
-                "title": response.notification.request.content.title,
-                "body": response.notification.request.content.body,
-            ]
-            
-            if let data = userInfo["data"] as? [String: Any] {
-                pusherMessage["data"] = data
-                print("SwiftPusherBeamsPlugin: Dados da notificação recebidos: \(data)")
+                var pusherMessage: [String : Any] = [
+                    "action": actionIdentifier,
+                    "title": response.notification.request.content.title,
+                    "body": response.notification.request.content.body,
+                ]
+                
+                if let data = userInfo["data"] as? [String: Any] {
+                    pusherMessage["data"] = data
+                    print("SwiftPusherBeamsPlugin: Dados da notificação recebidos: \(data)")
+                }
+                
+                if (SwiftPusherBeamsPlugin.callbackHandler != nil) {
+                    SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId(messageDidReceiveInTheBackgroundCallback, callbackName: "onMessageReceivedInTheBackground", args: [pusherMessage], completion: {_ in
+                        print("SwiftPusherBeamsPlugin: Notificação enviada ao Flutter: \(pusherMessage)")
+                    })
+                }   
+            } else if (actionIdentifier == UNNotificationDismissActionIdentifier) {
+                print("SwiftPusherBeamsPlugin: Notificação fechada pelo usuário.")
+            } else {
+                print("SwiftPusherBeamsPlugin: Notificação com ação desconhecida.")
             }
-            
-            if (SwiftPusherBeamsPlugin.callbackHandler != nil) {
-                SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId("onMessageReceivedInTheBackground", callbackName: "onMessageReceivedInTheBackground", args: [pusherMessage], completion: {_ in
-                    print("SwiftPusherBeamsPlugin: Notificação enviada ao Flutter: \(pusherMessage)")
-                })
-            }   
-        } else if (actionIdentifier == UNNotificationDismissActionIdentifier) {
-            print("SwiftPusherBeamsPlugin: Notificação fechada pelo usuário.")
-        } else {
-            print("SwiftPusherBeamsPlugin: Notificação com ação desconhecida.")
+            completionHandler()
         }
-        completionHandler()
     }
     
 }
