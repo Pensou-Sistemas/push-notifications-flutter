@@ -160,8 +160,34 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
     }
 
     public override func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        // Handle the user interaction with the notification
-        // Not Implemented yet
+        let userInfo = response.notification.request.content.userInfo
+        let actionIdentifier = response.actionIdentifier
+
+        if (actionIdentifier == UNNotificationDefaultActionIdentifier) {
+            print("SwiftPusherBeamsPlugin: Notificação aberta pelo usuário.")
+
+            let pusherMessage: [String : Any] = [
+                "action": actionIdentifier,
+                "title": response.notification.request.content.title,
+                "body": response.notification.request.content.body,
+            ]
+            
+            if let data = userInfo["data"] as? [String: Any] {
+                pusherMessage["data"] = data
+                print("SwiftPusherBeamsPlugin: Dados da notificação recebidos: \(data)")
+            }
+            
+            if (SwiftPusherBeamsPlugin.callbackHandler != nil) {
+                SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId("onNotificationReceivedInTheBackground", callbackName: "onNotificationReceivedInTheBackground", args: [pusherMessage], completion: {_ in
+                    print("SwiftPusherBeamsPlugin: Notificação enviada ao Flutter: \(pusherMessage)")
+                })
+            }   
+        } else if (actionIdentifier == UNNotificationDismissActionIdentifier) {
+            print("SwiftPusherBeamsPlugin: Notificação fechada pelo usuário.")
+        } else {
+            print("SwiftPusherBeamsPlugin: Notificação com ação desconhecida.")
+        }
+        completionHandler()
     }
     
 }
