@@ -31,14 +31,14 @@ class PusherBeamsPlugin : FlutterPlugin, Messages.PusherBeamsApi, ActivityAware,
     private lateinit var callbackHandlerApi: Messages.CallbackHandlerApi
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        Messages.PusherBeamsApi.setup(flutterPluginBinding.binaryMessenger, this)
+        Messages.PusherBeamsApi.setUp(flutterPluginBinding.binaryMessenger, this)
 
         context = flutterPluginBinding.applicationContext
         callbackHandlerApi = Messages.CallbackHandlerApi(flutterPluginBinding.binaryMessenger)
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        Messages.PusherBeamsApi.setup(binding.binaryMessenger, null)
+        Messages.PusherBeamsApi.setUp(binding.binaryMessenger, null)
         callbackHandlerApi = Messages.CallbackHandlerApi(binding.binaryMessenger)
     }
 

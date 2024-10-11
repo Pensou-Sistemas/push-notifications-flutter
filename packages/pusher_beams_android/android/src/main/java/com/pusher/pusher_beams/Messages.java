@@ -596,6 +596,11 @@ public class Messages {
       this.messageChannelSuffix = messageChannelSuffix.isEmpty() ? "" : "." + messageChannelSuffix;
     }
 
+    public interface Reply<T> {
+      void reply(T reply);
+    }
+
+
     /**
      * Public interface for sending reply.
      * The codec used by CallbackHandlerApi.
