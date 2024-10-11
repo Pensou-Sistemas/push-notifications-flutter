@@ -242,7 +242,7 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onInterestChanges(OnInterestsChange callback) async {
+  Future<void> onInterestChanges(dynamic callback) async {
     final String channelName = 'dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onInterestChanges$_messageChannelSuffix';
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       channelName,
@@ -308,7 +308,7 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onMessageReceivedInTheForeground(OnMessageReceivedInTheForeground callback) async {
+  Future<void> onMessageReceivedInTheForeground(dynamic callback) async {
     final String channelName =
         'dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onMessageReceivedInTheForeground$_messageChannelSuffix';
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -331,7 +331,7 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onMessageReceivedInTheBackground(OnMessageReceivedInTheBackground callback) async {
+  Future<void> onMessageReceivedInTheBackground(dynamic callback) async {
     final String channelName =
         'dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onMessageReceivedInTheBackground$_messageChannelSuffix';
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
