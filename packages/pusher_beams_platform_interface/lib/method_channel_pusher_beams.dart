@@ -242,14 +242,14 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onInterestChanges(OnInterestsChange callbackId) async {
+  Future<void> onInterestChanges(OnInterestsChange callback) async {
     final String channelName = 'dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onInterestChanges$_messageChannelSuffix';
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       channelName,
       channelCodec,
       binaryMessenger: _binaryMessenger,
     );
-    final List<Object?>? _replyList = await channel.send(<Object?>[callbackId]) as List<Object?>?;
+    final List<Object?>? _replyList = await channel.send(<Object?>[callback]) as List<Object?>?;
     if (_replyList == null) {
       throw _createConnectionError(channelName);
     } else if (_replyList.length > 1) {
