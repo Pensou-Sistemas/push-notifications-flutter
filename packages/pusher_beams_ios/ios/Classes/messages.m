@@ -150,7 +150,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
     if (api) {
       NSCAssert([api respondsToSelector:@selector(getInitialMessageWithCompletion:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(getInitialMessageWithCompletion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api getInitialMessageWithCompletion:^(NSDictionary<NSString *, PGNdynamic *> *_Nullable output, FlutterError *_Nullable error) {
+        [api getInitialMessageWithCompletion:^(NSDictionary<NSString *, NSObject *> *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
       }];
