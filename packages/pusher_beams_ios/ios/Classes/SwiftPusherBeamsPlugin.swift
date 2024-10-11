@@ -21,7 +21,7 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
         let instance : SwiftPusherBeamsPlugin = SwiftPusherBeamsPlugin()
       
         callbackHandler = CallbackHandlerApi(binaryMessenger: messenger)
-        SetUpPusherBeamsApi(messenger, instance)
+        PusherBeamsApiSetup(messenger, instance)
         
         UNUserNotificationCenter.current().delegate = instance
         registrar.addApplicationDelegate(instance)
