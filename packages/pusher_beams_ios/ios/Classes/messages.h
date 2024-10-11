@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// The codec used by all APIs.
 NSObject<FlutterMessageCodec> *PGNGetMessagesCodec(void);
 
-@protocol PGNPusherBeamsApi
+@protocol PusherBeamsApi
 - (void)startInstanceId:(NSString *)instanceId error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)getInitialMessageWithCompletion:(void (^)(NSDictionary<NSString *, NSObject *> *_Nullable, FlutterError *_Nullable))completion;
 - (void)addDeviceInterestInterest:(NSString *)interest error:(FlutterError *_Nullable *_Nonnull)error;
@@ -43,12 +43,12 @@ NSObject<FlutterMessageCodec> *PGNGetMessagesCodec(void);
 - (void)stopWithError:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void SetUpPGNPusherBeamsApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PGNPusherBeamsApi> *_Nullable api);
+extern void SetUpPusherBeamsApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PusherBeamsApi> *_Nullable api);
 
-extern void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PGNPusherBeamsApi> *_Nullable api, NSString *messageChannelSuffix);
+extern void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PusherBeamsApi> *_Nullable api, NSString *messageChannelSuffix);
 
 
-@interface PGNCallbackHandlerApi : NSObject
+@interface CallbackHandlerApi : NSObject
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger;
 - (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger messageChannelSuffix:(nullable NSString *)messageChannelSuffix;
 - (void)handleCallbackCallbackId:(NSString *)callbackId callbackName:(NSString *)callbackName args:(NSArray<id> *)args completion:(void (^)(FlutterError *_Nullable))completion;

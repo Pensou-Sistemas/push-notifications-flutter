@@ -116,11 +116,11 @@ NSObject<FlutterMessageCodec> *PGNGetMessagesCodec(void) {
   });
   return sSharedObject;
 }
-void SetUpPGNPusherBeamsApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PGNPusherBeamsApi> *api) {
-  SetUpPGNPusherBeamsApiWithSuffix(binaryMessenger, api, @"");
+void SetUpPusherBeamsApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PusherBeamsApi> *api) {
+  SetUpPusherBeamsApiWithSuffix(binaryMessenger, api, @"");
 }
 
-void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PGNPusherBeamsApi> *api, NSString *messageChannelSuffix) {
+void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, NSObject<PusherBeamsApi> *api, NSString *messageChannelSuffix) {
   messageChannelSuffix = messageChannelSuffix.length > 0 ? [NSString stringWithFormat: @".%@", messageChannelSuffix] : @"";
   {
     FlutterBasicMessageChannel *channel =
@@ -129,7 +129,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(startInstanceId:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(startInstanceId:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(startInstanceId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(startInstanceId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_instanceId = GetNullableObjectAtIndex(args, 0);
@@ -148,7 +148,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getInitialMessageWithCompletion:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(getInitialMessageWithCompletion:)", api);
+      NSCAssert([api respondsToSelector:@selector(getInitialMessageWithCompletion:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(getInitialMessageWithCompletion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         [api getInitialMessageWithCompletion:^(NSDictionary<NSString *, NSObject *> *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
@@ -165,7 +165,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(addDeviceInterestInterest:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(addDeviceInterestInterest:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(addDeviceInterestInterest:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(addDeviceInterestInterest:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_interest = GetNullableObjectAtIndex(args, 0);
@@ -184,7 +184,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(removeDeviceInterestInterest:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(removeDeviceInterestInterest:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(removeDeviceInterestInterest:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(removeDeviceInterestInterest:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_interest = GetNullableObjectAtIndex(args, 0);
@@ -203,7 +203,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(getDeviceInterestsWithError:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(getDeviceInterestsWithError:)", api);
+      NSCAssert([api respondsToSelector:@selector(getDeviceInterestsWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(getDeviceInterestsWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         NSArray<NSString *> *output = [api getDeviceInterestsWithError:&error];
@@ -220,7 +220,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setDeviceInterestsInterests:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(setDeviceInterestsInterests:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(setDeviceInterestsInterests:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(setDeviceInterestsInterests:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSArray<NSString *> *arg_interests = GetNullableObjectAtIndex(args, 0);
@@ -239,7 +239,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(clearDeviceInterestsWithError:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(clearDeviceInterestsWithError:)", api);
+      NSCAssert([api respondsToSelector:@selector(clearDeviceInterestsWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(clearDeviceInterestsWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         [api clearDeviceInterestsWithError:&error];
@@ -256,7 +256,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(onInterestChangesCallbackId:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(onInterestChangesCallbackId:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(onInterestChangesCallbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(onInterestChangesCallbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_callbackId = GetNullableObjectAtIndex(args, 0);
@@ -275,7 +275,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(setUserIdUserId:provider:callbackId:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(setUserIdUserId:provider:callbackId:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(setUserIdUserId:provider:callbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(setUserIdUserId:provider:callbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_userId = GetNullableObjectAtIndex(args, 0);
@@ -296,7 +296,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(clearAllStateWithError:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(clearAllStateWithError:)", api);
+      NSCAssert([api respondsToSelector:@selector(clearAllStateWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(clearAllStateWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         [api clearAllStateWithError:&error];
@@ -313,7 +313,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(onMessageReceivedInTheForegroundCallbackId:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(onMessageReceivedInTheForegroundCallbackId:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(onMessageReceivedInTheForegroundCallbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(onMessageReceivedInTheForegroundCallbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_callbackId = GetNullableObjectAtIndex(args, 0);
@@ -332,7 +332,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(onMessageReceivedInTheBackgroundCallbackId:error:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(onMessageReceivedInTheBackgroundCallbackId:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(onMessageReceivedInTheBackgroundCallbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(onMessageReceivedInTheBackgroundCallbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_callbackId = GetNullableObjectAtIndex(args, 0);
@@ -351,7 +351,7 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
         binaryMessenger:binaryMessenger
         codec:PGNGetMessagesCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(stopWithError:)], @"PGNPusherBeamsApi api (%@) doesn't respond to @selector(stopWithError:)", api);
+      NSCAssert([api respondsToSelector:@selector(stopWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(stopWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         [api stopWithError:&error];
@@ -362,12 +362,12 @@ void SetUpPGNPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger
     }
   }
 }
-@interface PGNCallbackHandlerApi ()
+@interface CallbackHandlerApi ()
 @property(nonatomic, strong) NSObject<FlutterBinaryMessenger> *binaryMessenger;
 @property(nonatomic, strong) NSString *messageChannelSuffix;
 @end
 
-@implementation PGNCallbackHandlerApi
+@implementation CallbackHandlerApi
 
 - (instancetype)initWithBinaryMessenger:(NSObject<FlutterBinaryMessenger> *)binaryMessenger {
   return [self initWithBinaryMessenger:binaryMessenger messageChannelSuffix:@""];
