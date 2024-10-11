@@ -264,7 +264,7 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> setUserId(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
+  Future<void> setUserId(String userId, BeamsAuthProvider provider, dynamic callback) async {
     final String channelName = 'dev.flutter.pigeon.pusher_beams.PusherBeamsApi.setUserId$_messageChannelSuffix';
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       channelName,

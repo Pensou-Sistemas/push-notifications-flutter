@@ -15,17 +15,17 @@ abstract class PusherBeamsPlatform extends PlatformInterface {
 
   // NOTE: Remember to change .onInterestChanges and .setUserId last argument
   // and .getInitialMessage return type to dynamic on MethodChannel
-  static PusherBeamsPlatform _instance = PusherBeamsApi();
+  static PusherBeamsApi _instance = PusherBeamsApi();
 
   /// The default instance of [PusherBeamsPlatform] to use.
   ///
   /// Defaults to [DefaultPlatform].
-  static PusherBeamsPlatform get instance => _instance;
+  static PusherBeamsApi get instance => _instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
   /// class that extends [PusherBeamsPlatform] when they register themselves.
   // https://github.com/flutter/flutter/issues/43368
-  static set instance(PusherBeamsPlatform instance) {
+  static set instance(PusherBeamsApi instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }

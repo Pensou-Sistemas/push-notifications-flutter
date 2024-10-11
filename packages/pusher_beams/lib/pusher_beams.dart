@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart';
 import 'package:pusher_beams_platform_interface/pusher_beams_platform_interface.dart';
 import 'package:uuid/uuid.dart';
@@ -15,12 +14,10 @@ class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   /// Stores the ids and the [Function]s to call back.
   static final Map<String, Function> _callbacks = {};
 
-  static final dynamic _pusherBeamsApi = PusherBeamsPlatform.instance;
+  static final PusherBeamsApi _pusherBeamsApi = PusherBeamsPlatform.instance;
 
   PusherBeams._privateConstructor() {
-    if (!kIsWeb) {
-      CallbackHandlerApi.setUp(this);
-    }
+    CallbackHandlerApi.setUp(this);
   }
 
   static final PusherBeams _instance = PusherBeams._privateConstructor();
@@ -98,10 +95,7 @@ class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   @override
   Future<void> clearAllState() async {
     await _pusherBeamsApi.clearAllState();
-
-    if (!kIsWeb) {
-      _callbacks.clear();
-    }
+    _callbacks.clear();
   }
 
   /// Unsubscribes all interests from this device.
@@ -154,11 +148,9 @@ class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   Future<void> onInterestChanges(OnInterestsChange callback) async {
     final callbackId = _uuid.v4();
 
-    if (!kIsWeb) {
-      _callbacks[callbackId] = callback;
-    }
+    _callbacks[callbackId] = callback;
 
-    await _pusherBeamsApi.onInterestChanges(kIsWeb ? callback : callbackId);
+    await _pusherBeamsApi.onInterestChanges(callbackId);
   }
 
   /// Removes an [interest] in this device.
@@ -236,11 +228,9 @@ class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   Future<void> setUserId(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
     final callbackId = _uuid.v4();
 
-    if (!kIsWeb) {
-      _callbacks[callbackId] = callback;
-    }
+    _callbacks[callbackId] = callback;
 
-    await _pusherBeamsApi.setUserId(userId, provider, kIsWeb ? callback : callbackId);
+    await _pusherBeamsApi.setUserId(userId, provider, callbackId);
   }
 
   /// This function register this device to *Pusher Beams* service with the given [instanceId].
@@ -278,9 +268,7 @@ class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   Future<void> stop() async {
     await _pusherBeamsApi.stop();
 
-    if (!kIsWeb) {
-      _callbacks.clear();
-    }
+    _callbacks.clear();
   }
 
   /// Registers a listener which calls back the [OnMessageReceivedInTheForeground] function when the app receives a push notification in the foreground.
@@ -307,22 +295,18 @@ class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   Future<void> onMessageReceivedInTheForeground(OnMessageReceivedInTheForeground callback) async {
     final callbackId = _uuid.v4();
 
-    if (!kIsWeb) {
-      _callbacks[callbackId] = callback;
-    }
+    _callbacks[callbackId] = callback;
 
-    await _pusherBeamsApi.onMessageReceivedInTheForeground(kIsWeb ? callback : callbackId);
+    await _pusherBeamsApi.onMessageReceivedInTheForeground(callbackId);
   }
 
   @override
   Future<void> onMessageReceivedInTheBackground(OnMessageReceivedInTheBackground callback) async {
     final callbackId = _uuid.v4();
 
-    if (!kIsWeb) {
-      _callbacks[callbackId] = callback;
-    }
+    _callbacks[callbackId] = callback;
 
-    await _pusherBeamsApi.onMessageReceivedInTheBackground(kIsWeb ? callback : callbackId);
+    await _pusherBeamsApi.onMessageReceivedInTheBackground(callbackId);
   }
 
   /// Handler which receives callbacks from the native platforms.
