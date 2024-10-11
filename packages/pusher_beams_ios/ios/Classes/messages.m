@@ -31,34 +31,34 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   return (result == [NSNull null]) ? nil : result;
 }
 
-@interface PGNBeamsAuthProvider ()
-+ (PGNBeamsAuthProvider *)fromList:(NSArray<id> *)list;
-+ (nullable PGNBeamsAuthProvider *)nullableFromList:(NSArray<id> *)list;
+@interface BeamsAuthProvider ()
++ (BeamsAuthProvider *)fromList:(NSArray<id> *)list;
++ (nullable BeamsAuthProvider *)nullableFromList:(NSArray<id> *)list;
 - (NSArray<id> *)toList;
 @end
 
-@implementation PGNBeamsAuthProvider
+@implementation BeamsAuthProvider
 + (instancetype)makeWithAuthUrl:(nullable NSString *)authUrl
     headers:(nullable NSDictionary<NSString *, NSString *> *)headers
     queryParams:(nullable NSDictionary<NSString *, NSString *> *)queryParams
     credentials:(nullable NSString *)credentials {
-  PGNBeamsAuthProvider* pigeonResult = [[PGNBeamsAuthProvider alloc] init];
+  BeamsAuthProvider* pigeonResult = [[BeamsAuthProvider alloc] init];
   pigeonResult.authUrl = authUrl;
   pigeonResult.headers = headers;
   pigeonResult.queryParams = queryParams;
   pigeonResult.credentials = credentials;
   return pigeonResult;
 }
-+ (PGNBeamsAuthProvider *)fromList:(NSArray<id> *)list {
-  PGNBeamsAuthProvider *pigeonResult = [[PGNBeamsAuthProvider alloc] init];
++ (BeamsAuthProvider *)fromList:(NSArray<id> *)list {
+  BeamsAuthProvider *pigeonResult = [[BeamsAuthProvider alloc] init];
   pigeonResult.authUrl = GetNullableObjectAtIndex(list, 0);
   pigeonResult.headers = GetNullableObjectAtIndex(list, 1);
   pigeonResult.queryParams = GetNullableObjectAtIndex(list, 2);
   pigeonResult.credentials = GetNullableObjectAtIndex(list, 3);
   return pigeonResult;
 }
-+ (nullable PGNBeamsAuthProvider *)nullableFromList:(NSArray<id> *)list {
-  return (list) ? [PGNBeamsAuthProvider fromList:list] : nil;
++ (nullable BeamsAuthProvider *)nullableFromList:(NSArray<id> *)list {
+  return (list) ? [BeamsAuthProvider fromList:list] : nil;
 }
 - (NSArray<id> *)toList {
   return @[
@@ -70,24 +70,24 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 @end
 
-@interface PGNMessagesPigeonCodecReader : FlutterStandardReader
+@interface MessagesPigeonCodecReader : FlutterStandardReader
 @end
-@implementation PGNMessagesPigeonCodecReader
+@implementation MessagesPigeonCodecReader
 - (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
     case 129: 
-      return [PGNBeamsAuthProvider fromList:[self readValue]];
+      return [BeamsAuthProvider fromList:[self readValue]];
     default:
       return [super readValueOfType:type];
   }
 }
 @end
 
-@interface PGNMessagesPigeonCodecWriter : FlutterStandardWriter
+@interface MessagesPigeonCodecWriter : FlutterStandardWriter
 @end
-@implementation PGNMessagesPigeonCodecWriter
+@implementation MessagesPigeonCodecWriter
 - (void)writeValue:(id)value {
-  if ([value isKindOfClass:[PGNBeamsAuthProvider class]]) {
+  if ([value isKindOfClass:[BeamsAuthProvider class]]) {
     [self writeByte:129];
     [self writeValue:[value toList]];
   } else {
@@ -96,22 +96,22 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 @end
 
-@interface PGNMessagesPigeonCodecReaderWriter : FlutterStandardReaderWriter
+@interface MessagesPigeonCodecReaderWriter : FlutterStandardReaderWriter
 @end
-@implementation PGNMessagesPigeonCodecReaderWriter
+@implementation MessagesPigeonCodecReaderWriter
 - (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
-  return [[PGNMessagesPigeonCodecWriter alloc] initWithData:data];
+  return [[MessagesPigeonCodecWriter alloc] initWithData:data];
 }
 - (FlutterStandardReader *)readerWithData:(NSData *)data {
-  return [[PGNMessagesPigeonCodecReader alloc] initWithData:data];
+  return [[MessagesPigeonCodecReader alloc] initWithData:data];
 }
 @end
 
-NSObject<FlutterMessageCodec> *PGNGetMessagesCodec(void) {
+NSObject<FlutterMessageCodec> *GetMessagesCodec(void) {
   static FlutterStandardMessageCodec *sSharedObject = nil;
   static dispatch_once_t sPred = 0;
   dispatch_once(&sPred, ^{
-    PGNMessagesPigeonCodecReaderWriter *readerWriter = [[PGNMessagesPigeonCodecReaderWriter alloc] init];
+    MessagesPigeonCodecReaderWriter *readerWriter = [[MessagesPigeonCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
@@ -127,7 +127,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.start", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(startInstanceId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(startInstanceId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -146,7 +146,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.getInitialMessage", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(getInitialMessageWithCompletion:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(getInitialMessageWithCompletion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -163,7 +163,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.addDeviceInterest", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(addDeviceInterestInterest:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(addDeviceInterestInterest:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -182,7 +182,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.removeDeviceInterest", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(removeDeviceInterestInterest:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(removeDeviceInterestInterest:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -201,7 +201,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.getDeviceInterests", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(getDeviceInterestsWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(getDeviceInterestsWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -218,7 +218,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.setDeviceInterests", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(setDeviceInterestsInterests:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(setDeviceInterestsInterests:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -237,7 +237,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.clearDeviceInterests", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(clearDeviceInterestsWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(clearDeviceInterestsWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -254,7 +254,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onInterestChanges", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(onInterestChangesCallbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(onInterestChangesCallbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -273,13 +273,13 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.setUserId", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(setUserIdUserId:provider:callbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(setUserIdUserId:provider:callbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray<id> *args = message;
         NSString *arg_userId = GetNullableObjectAtIndex(args, 0);
-        PGNBeamsAuthProvider *arg_provider = GetNullableObjectAtIndex(args, 1);
+        BeamsAuthProvider *arg_provider = GetNullableObjectAtIndex(args, 1);
         NSString *arg_callbackId = GetNullableObjectAtIndex(args, 2);
         FlutterError *error;
         [api setUserIdUserId:arg_userId provider:arg_provider callbackId:arg_callbackId error:&error];
@@ -294,7 +294,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.clearAllState", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(clearAllStateWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(clearAllStateWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -311,7 +311,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onMessageReceivedInTheForeground", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(onMessageReceivedInTheForegroundCallbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(onMessageReceivedInTheForegroundCallbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -330,7 +330,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.onMessageReceivedInTheBackground", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(onMessageReceivedInTheBackgroundCallbackId:error:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(onMessageReceivedInTheBackgroundCallbackId:error:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -349,7 +349,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
       [[FlutterBasicMessageChannel alloc]
         initWithName:[NSString stringWithFormat:@"%@%@", @"dev.flutter.pigeon.pusher_beams.PusherBeamsApi.stop", messageChannelSuffix]
         binaryMessenger:binaryMessenger
-        codec:PGNGetMessagesCodec()];
+        codec:GetMessagesCodec()];
     if (api) {
       NSCAssert([api respondsToSelector:@selector(stopWithError:)], @"PusherBeamsApi api (%@) doesn't respond to @selector(stopWithError:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -386,7 +386,7 @@ void SetUpPusherBeamsApiWithSuffix(id<FlutterBinaryMessenger> binaryMessenger, N
     [FlutterBasicMessageChannel
       messageChannelWithName:channelName
       binaryMessenger:self.binaryMessenger
-      codec:PGNGetMessagesCodec()];
+      codec:GetMessagesCodec()];
   [channel sendMessage:@[arg_callbackId ?: [NSNull null], arg_callbackName ?: [NSNull null], arg_args ?: [NSNull null]] reply:^(NSArray<id> *reply) {
     if (reply != nil) {
       if (reply.count > 1) {

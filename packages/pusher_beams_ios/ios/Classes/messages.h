@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class PGNBeamsAuthProvider;
+@class BeamsAuthProvider;
 
-@interface PGNBeamsAuthProvider : NSObject
+@interface BeamsAuthProvider : NSObject
 + (instancetype)makeWithAuthUrl:(nullable NSString *)authUrl
     headers:(nullable NSDictionary<NSString *, NSString *> *)headers
     queryParams:(nullable NSDictionary<NSString *, NSString *> *)queryParams
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// The codec used by all APIs.
-NSObject<FlutterMessageCodec> *PGNGetMessagesCodec(void);
+NSObject<FlutterMessageCodec> *GetMessagesCodec(void);
 
 @protocol PusherBeamsApi
 - (void)startInstanceId:(NSString *)instanceId error:(FlutterError *_Nullable *_Nonnull)error;
@@ -36,7 +36,7 @@ NSObject<FlutterMessageCodec> *PGNGetMessagesCodec(void);
 - (void)setDeviceInterestsInterests:(NSArray<NSString *> *)interests error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)clearDeviceInterestsWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)onInterestChangesCallbackId:(NSString *)callbackId error:(FlutterError *_Nullable *_Nonnull)error;
-- (void)setUserIdUserId:(NSString *)userId provider:(PGNBeamsAuthProvider *)provider callbackId:(NSString *)callbackId error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)setUserIdUserId:(NSString *)userId provider:(BeamsAuthProvider *)provider callbackId:(NSString *)callbackId error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)clearAllStateWithError:(FlutterError *_Nullable *_Nonnull)error;
 - (void)onMessageReceivedInTheForegroundCallbackId:(NSString *)callbackId error:(FlutterError *_Nullable *_Nonnull)error;
 - (void)onMessageReceivedInTheBackgroundCallbackId:(NSString *)callbackId error:(FlutterError *_Nullable *_Nonnull)error;
