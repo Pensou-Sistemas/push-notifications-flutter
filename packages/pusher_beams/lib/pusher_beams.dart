@@ -11,7 +11,7 @@ const _uuid = Uuid();
 
 /// App-facing Implementation for [PusherBeamsPlatform] plugin.
 /// It's designed to be a singleton and must be consumed with [PusherBeams.instance].
-class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
+class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
   /// Stores the ids and the [Function]s to call back.
   static final Map<String, Function> _callbacks = {};
 
@@ -19,7 +19,7 @@ class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
 
   PusherBeams._privateConstructor() {
     if (!kIsWeb) {
-      CallbackHandlerApi.setup(this);
+      CallbackHandlerApi.setUp(this);
     }
   }
 

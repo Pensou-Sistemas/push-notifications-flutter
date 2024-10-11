@@ -196,6 +196,27 @@ class PusherBeamsPlugin : FlutterPlugin, Messages.PusherBeamsApi, ActivityAware,
         }
     }
 
+    override fun onMessageReceivedInTheBackground(callbackId: String) {
+        currentActivity?.let { activity ->
+            PushNotifications.setOnMessageReceivedListenerForVisibleActivity(
+                activity,
+                object : PushNotificationReceivedListener {
+                    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+                        activity.runOnUiThread {
+                            val pusherMessage = remoteMessage.toPusherMessage()
+                            callbackHandlerApi.handleCallback(
+                                callbackId,
+                                "onMessageReceivedInTheBackground",
+                                listOf(pusherMessage)
+                            ) {
+                                Log.d(this.toString(), "Message received: $pusherMessage")
+                            }
+                        }
+                    }
+                })
+        }
+    }
+
     override fun stop() {
         PushNotifications.stop()
     }
