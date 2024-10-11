@@ -249,7 +249,7 @@ public class Messages {
 
     void start(@NonNull String instanceId);
 
-    void getInitialMessage(@NonNull Result<Map<String, dynamic>> result);
+    void getInitialMessage(@NonNull Result<Map<String, Object>> result);
 
     void addDeviceInterest(@NonNull String interest);
 
