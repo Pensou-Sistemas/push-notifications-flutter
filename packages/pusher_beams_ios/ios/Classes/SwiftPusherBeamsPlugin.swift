@@ -8,6 +8,7 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
     
     var interestsDidChangeCallback : String? = nil
     var messageDidReceiveInTheForegroundCallback : String? = nil
+    var messageDidReceiveInTheBackgroundCallback : String? = nil
     
     var beamsClient : PushNotifications?
     var started : Bool = false
@@ -166,7 +167,7 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
         if (actionIdentifier == UNNotificationDefaultActionIdentifier) {
             print("SwiftPusherBeamsPlugin: Notificação aberta pelo usuário.")
 
-            let pusherMessage: [String : Any] = [
+            var pusherMessage: [String : Any] = [
                 "action": actionIdentifier,
                 "title": response.notification.request.content.title,
                 "body": response.notification.request.content.body,
@@ -178,7 +179,7 @@ public class SwiftPusherBeamsPlugin: FlutterPluginAppLifeCycleDelegate, FlutterP
             }
             
             if (SwiftPusherBeamsPlugin.callbackHandler != nil) {
-                SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId("onNotificationReceivedInTheBackground", callbackName: "onNotificationReceivedInTheBackground", args: [pusherMessage], completion: {_ in
+                SwiftPusherBeamsPlugin.callbackHandler?.handleCallbackCallbackId("onMessageReceivedInTheBackground", callbackName: "onMessageReceivedInTheBackground", args: [pusherMessage], completion: {_ in
                     print("SwiftPusherBeamsPlugin: Notificação enviada ao Flutter: \(pusherMessage)")
                 })
             }   

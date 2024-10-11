@@ -12,9 +12,7 @@ class PusherBeamsClientOptions {
   external ServiceWorkerRegistration? get serviceWorkerRegistration;
 
   // Must have an unnamed factory constructor with named arguments.
-  external factory PusherBeamsClientOptions(
-      {String instanceId,
-      ServiceWorkerRegistration? serviceWorkerRegistration});
+  external factory PusherBeamsClientOptions({String instanceId, ServiceWorkerRegistration? serviceWorkerRegistration});
 }
 
 @JS('Client')
@@ -31,6 +29,7 @@ class PusherBeamsClient {
   external Future<void> clearAllState();
   external Future<void> stop();
   external Future<void> onMessageReceivedInTheForeground(String callbackId);
+  external Future<void> onMessageReceivedInTheBackground(String callbackId);
 }
 
 @JS()
@@ -41,8 +40,7 @@ class TokenProviderOptions {
   external Map? get headers;
   external String? get credentials;
 
-  external factory TokenProviderOptions(
-      {String url, Map? queryParams, Map? headers, String? credentials});
+  external factory TokenProviderOptions({String url, Map? queryParams, Map? headers, String? credentials});
 }
 
 @JS('TokenProvider')

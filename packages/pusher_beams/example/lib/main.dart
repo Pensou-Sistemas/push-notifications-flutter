@@ -5,8 +5,7 @@ import 'package:pusher_beams/pusher_beams.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await PusherBeams.instance.start(
-      'your-instance-id'); // Supply your own instanceId
+  await PusherBeams.instance.start('your-instance-id'); // Supply your own instanceId
 
   runApp(const MyApp());
 }
@@ -63,11 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // This is not intented to use in web
     if (!kIsWeb) {
-      await PusherBeams.instance
-          .onInterestChanges((interests) => {print('Interests: $interests')});
+      await PusherBeams.instance.onInterestChanges((interests) => {print('Interests: $interests')});
 
-      await PusherBeams.instance
-          .onMessageReceivedInTheForeground(_onMessageReceivedInTheForeground);
+      await PusherBeams.instance.onMessageReceivedInTheForeground(_onMessageReceivedInTheForeground);
     }
     await _checkForInitialMessage();
   }
@@ -84,8 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showAlert(String title, String message) {
-    AlertDialog alert = AlertDialog(
-        title: Text(title), content: Text(message), actions: const []);
+    AlertDialog alert = AlertDialog(title: Text(title), content: Text(message), actions: const []);
 
     showDialog(
       context: context,
@@ -126,8 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   await PusherBeams.instance.addDeviceInterest('garlic');
                 },
                 child: const Text('I like garlic')),
-            OutlinedButton(
-                onPressed: getSecure, child: const Text('Get Secure')),
+            OutlinedButton(onPressed: getSecure, child: const Text('Get Secure')),
             OutlinedButton(
                 onPressed: () async {
                   await PusherBeams.instance.clearDeviceInterests();
