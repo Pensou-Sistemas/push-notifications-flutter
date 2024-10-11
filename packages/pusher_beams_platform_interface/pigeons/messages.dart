@@ -1,10 +1,5 @@
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(PigeonOptions(
-  dartPackageName: 'pusher_beams',
-  javaOut: 'Messages.java',
-  dartOut: 'messages.dart',
-))
 class BeamsAuthProvider {
   String? authUrl;
   Map<String?, String?>? headers;

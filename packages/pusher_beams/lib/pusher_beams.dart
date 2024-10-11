@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:pusher_beams_platform_interface/method_channel_pusher_beams.dart';
 import 'package:pusher_beams_platform_interface/pusher_beams_platform_interface.dart';
 import 'package:uuid/uuid.dart';
@@ -10,14 +11,16 @@ const _uuid = Uuid();
 
 /// App-facing Implementation for [PusherBeamsPlatform] plugin.
 /// It's designed to be a singleton and must be consumed with [PusherBeams.instance].
-class PusherBeams extends PusherBeamsPlatform implements CallbackHandlerApi {
+class PusherBeams extends PusherBeamsPlatform with CallbackHandlerApi {
   /// Stores the ids and the [Function]s to call back.
   static final Map<String, Function> _callbacks = {};
 
   static final PusherBeamsApi _pusherBeamsApi = PusherBeamsPlatform.instance;
 
   PusherBeams._privateConstructor() {
-    CallbackHandlerApi.setUp(this);
+    if (!kIsWeb) {
+      CallbackHandlerApi.setup(this);
+    }
   }
 
   static final PusherBeams _instance = PusherBeams._privateConstructor();
