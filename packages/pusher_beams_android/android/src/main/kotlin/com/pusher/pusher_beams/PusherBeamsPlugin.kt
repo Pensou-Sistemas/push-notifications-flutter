@@ -31,14 +31,14 @@ class PusherBeamsPlugin : FlutterPlugin, Messages.PusherBeamsApi, ActivityAware,
     private lateinit var callbackHandlerApi: Messages.CallbackHandlerApi
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        Messages.PusherBeamsApi.setUp(flutterPluginBinding.binaryMessenger, this)
+        Messages.PusherBeamsApi.setup(flutterPluginBinding.binaryMessenger, this)
 
         context = flutterPluginBinding.applicationContext
         callbackHandlerApi = Messages.CallbackHandlerApi(flutterPluginBinding.binaryMessenger)
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        Messages.PusherBeamsApi.setUp(binding.binaryMessenger, null)
+        Messages.PusherBeamsApi.setup(binding.binaryMessenger, null)
         callbackHandlerApi = Messages.CallbackHandlerApi(binding.binaryMessenger)
     }
 
@@ -186,6 +186,27 @@ class PusherBeamsPlugin : FlutterPlugin, Messages.PusherBeamsApi, ActivityAware,
                             callbackHandlerApi.handleCallback(
                                 callbackId,
                                 "onMessageReceivedInTheForeground",
+                                listOf(pusherMessage)
+                            ) {
+                                Log.d(this.toString(), "Message received: $pusherMessage")
+                            }
+                        }
+                    }
+                })
+        }
+    }
+
+    override fun onMessageReceivedInTheBackground(callbackId: String) {
+        currentActivity?.let { activity ->
+            PushNotifications.setOnMessageReceivedListenerForVisibleActivity(
+                activity,
+                object : PushNotificationReceivedListener {
+                    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+                        activity.runOnUiThread {
+                            val pusherMessage = remoteMessage.toPusherMessage()
+                            callbackHandlerApi.handleCallback(
+                                callbackId,
+                                "onMessageReceivedInTheBackground",
                                 listOf(pusherMessage)
                             ) {
                                 Log.d(this.toString(), "Message received: $pusherMessage")

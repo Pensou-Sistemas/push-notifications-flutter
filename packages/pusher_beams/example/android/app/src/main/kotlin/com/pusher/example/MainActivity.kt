@@ -1,4 +1,4 @@
-package com.pusher.example
+package com.pensousistemas.amelo.app
 
 import io.flutter.embedding.android.FlutterActivity
 

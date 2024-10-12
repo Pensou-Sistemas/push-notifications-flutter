@@ -8,24 +8,19 @@ typedef OnInterestsChange = Function(List<String?> interests);
 typedef OnMessageReceivedInTheForeground = Function(Map<Object?, Object?> data);
 typedef OnMessageReceivedInTheBackground = Function(Map<Object?, Object?> data);
 
+/// The interface that all implementations of pusher_beams must implement.
 abstract class PusherBeamsPlatform extends PlatformInterface {
+  /// Constructs an instance of [PusherBeamsPlatform]
   PusherBeamsPlatform() : super(token: _token);
+
+  static PusherBeamsPlatform _instance = PusherBeamsApi();
 
   static final Object _token = Object();
 
-  // NOTE: Remember to change .onInterestChanges and .setUserId last argument
-  // and .getInitialMessage return type to dynamic on MethodChannel
-  static PusherBeamsApi _instance = PusherBeamsApi();
-
   /// The default instance of [PusherBeamsPlatform] to use.
-  ///
-  /// Defaults to [DefaultPlatform].
-  static PusherBeamsApi get instance => _instance;
+  static PusherBeamsPlatform get instance => _instance;
 
-  /// Platform-specific plugins should set this with their own platform-specific
-  /// class that extends [PusherBeamsPlatform] when they register themselves.
-  // https://github.com/flutter/flutter/issues/43368
-  static set instance(PusherBeamsApi instance) {
+  static set instance(PusherBeamsPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -58,11 +53,11 @@ abstract class PusherBeamsPlatform extends PlatformInterface {
     throw UnimplementedError('clearDeviceInterests() has not been implemented.');
   }
 
-  Future<void> onInterestChanges(OnInterestsChange callback) {
+  Future<void> onInterestChanges(String callbackId) {
     throw UnimplementedError('onInterestChanges() has not been implemented.');
   }
 
-  Future<void> setUserId(String userId, BeamsAuthProvider provider, OnUserCallback callback) {
+  Future<void> setUserId(String userId, BeamsAuthProvider provider, String callbackId) {
     throw UnimplementedError('setUserId() has not been implemented.');
   }
 
@@ -74,11 +69,11 @@ abstract class PusherBeamsPlatform extends PlatformInterface {
     throw UnimplementedError('stop() has not been implemented.');
   }
 
-  Future<void> onMessageReceivedInTheForeground(OnMessageReceivedInTheForeground callback) {
+  Future<void> onMessageReceivedInTheForeground(String callbackId) {
     throw UnimplementedError('onMessageReceivedInTheForeground() has not been implemented.');
   }
 
-  Future<void> onMessageReceivedInTheBackground(OnMessageReceivedInTheBackground callback) {
+  Future<void> onMessageReceivedInTheBackground(String callbackId) {
     throw UnimplementedError('onMessageReceivedInTheBackground() has not been implemented.');
   }
 }

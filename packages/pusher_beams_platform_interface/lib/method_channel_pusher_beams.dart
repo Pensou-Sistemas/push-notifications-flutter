@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 
 import 'pusher_beams_platform_interface.dart';
 
@@ -230,11 +231,11 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onInterestChanges(dynamic callback) async {
+  Future<void> onInterestChanges(String callbackId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.PusherBeamsApi.onInterestChanges', codec,
         binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(<Object>[callback]) as Map<Object?, Object?>?;
+    final Map<Object?, Object?>? replyMap = await channel.send(<Object>[callbackId]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -253,12 +254,12 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> setUserId(String userId, BeamsAuthProvider provider, dynamic callback) async {
+  Future<void> setUserId(String userId, BeamsAuthProvider provider, String callbackId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.PusherBeamsApi.setUserId', codec,
         binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
-        await channel.send(<Object>[userId, provider, callback]) as Map<Object?, Object?>?;
+        await channel.send(<Object>[userId, provider, callbackId]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -300,11 +301,11 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onMessageReceivedInTheForeground(dynamic callback) async {
+  Future<void> onMessageReceivedInTheForeground(String callbackId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.PusherBeamsApi.onMessageReceivedInTheForeground', codec,
         binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(<Object>[callback]) as Map<Object?, Object?>?;
+    final Map<Object?, Object?>? replyMap = await channel.send(<Object>[callbackId]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -323,11 +324,11 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   }
 
   @override
-  Future<void> onMessageReceivedInTheBackground(dynamic callback) async {
+  Future<void> onMessageReceivedInTheBackground(String callbackId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.PusherBeamsApi.onMessageReceivedInTheBackground', codec,
         binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap = await channel.send(<Object>[callback]) as Map<Object?, Object?>?;
+    final Map<Object?, Object?>? replyMap = await channel.send(<Object>[callbackId]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -421,6 +422,118 @@ abstract class CallbackHandlerApi {
           return;
         });
       }
+    }
+  }
+}
+
+class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
+  /// Stores the ids and the [Function]s to call back.
+  static final Map<String, Function> _callbacks = {};
+
+  @override
+  Future<bool> start(String instanceId) async {
+    await super.start(instanceId);
+    return true;
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getInitialMessage() async {
+    return await super.getInitialMessage();
+  }
+
+  Future<void> setUser(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
+    final callbackId = const Uuid().v4();
+
+    _callbacks[callbackId] = callback;
+
+    await super.setUserId(userId, provider, callbackId);
+  }
+
+  @override
+  Future<void> setDeviceInterests(List<String?> interests) async {
+    await super.setDeviceInterests(interests);
+  }
+
+  @override
+  Future<void> clearDeviceInterests() async {
+    await super.clearDeviceInterests();
+  }
+
+  @override
+  Future<void> removeDeviceInterest(String interest) async {
+    await super.removeDeviceInterest(interest);
+  }
+
+  @override
+  Future<List<String?>> getDeviceInterests() async {
+    return await super.getDeviceInterests();
+  }
+
+  @override
+  Future<void> clearAllState() async {
+    await super.clearAllState();
+    _callbacks.clear();
+  }
+
+  @override
+  Future<void> addDeviceInterest(String interest) async {
+    await super.addDeviceInterest(interest);
+  }
+
+  Future<void> onInterestChanging(OnInterestsChange callback) async {
+    final callbackId = const Uuid().v4();
+
+    _callbacks[callbackId] = callback;
+
+    await super.onInterestChanges(callbackId);
+  }
+
+  Future<void> onDidReceiveNotificationResponse(OnMessageReceivedInTheForeground callback) async {
+    final callbackId = const Uuid().v4();
+
+    _callbacks[callbackId] = callback;
+    await super.onMessageReceivedInTheForeground(callbackId);
+  }
+
+  Future<void> onDidReceiveBackgroundNotificationResponse(OnMessageReceivedInTheBackground callback) async {
+    final callbackId = const Uuid().v4();
+
+    _callbacks[callbackId] = callback;
+
+    await super.onMessageReceivedInTheBackground(callbackId);
+  }
+
+  @override
+  Future<void> stop() async {
+    await super.stop();
+    _callbacks.clear();
+  }
+
+  /// Handler which receives callbacks from the native platforms.
+  /// This currently supports [onInterestChanges] and [setUserId] callbacks
+  /// but by default it just call the [Function] set.
+  ///
+  /// **You're not supposed to use this**
+  @override
+  void handleCallback(String callbackId, String callbackName, List args) {
+    final callback = _callbacks[callbackId]!;
+
+    switch (callbackName) {
+      case "onInterestChanges":
+        callback((args[0] as List<Object?>).cast<String>());
+        return;
+      case "setUserId":
+        callback(args[0] as String?);
+        return;
+      case "onMessageReceivedInTheForeground":
+        callback((args[0] as Map<Object?, Object?>));
+        return;
+      case "onMessageReceivedInTheBackground":
+        callback((args[0] as Map<Object?, Object?>));
+        return;
+      default:
+        callback();
+        return;
     }
   }
 }

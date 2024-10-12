@@ -1,3 +1,11 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
+}
+
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -6,10 +14,6 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
@@ -21,15 +25,10 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-// Add this line (Flutter Pusher Beams)
-apply plugin: 'com.google.gms.google-services'
-
-android {
-    compileSdkVersion 31
+android {    
+    namespace "com.pensousistemas.amelo.app"
+    compileSdkVersion localProperties.getProperty('flutter.compileSdkVersion').toInteger()
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -45,10 +44,9 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.pusher.pusher_beams_example"
-        minSdkVersion 19
-        targetSdkVersion 31
+        applicationId "com.pensousistemas.amelo.app"
+        minSdkVersion localProperties.getProperty('flutter.minSdkVersion').toInteger()
+        targetSdkVersion localProperties.getProperty('flutter.targetSdkVersion').toInteger()
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -56,8 +54,6 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
     }
@@ -69,5 +65,10 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support:multidex:2.0.1'
+    implementation 'com.google.firebase:firebase-messaging:24.0.0'
+    implementation 'com.google.firebase:firebase-installations:17.1.0'
+    implementation 'com.pusher:push-notifications-android:1.9.2'
 }
+
+apply plugin: 'com.google.gms.google-services'
