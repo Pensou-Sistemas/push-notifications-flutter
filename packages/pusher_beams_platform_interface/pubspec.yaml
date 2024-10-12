@@ -1,6 +1,6 @@
 name: pusher_beams_platform_interface
 description: A common platform interface from Pusher Beams for Flutter, intended to be the platform interface package.
-version: 1.2.0
+version: 1.3.0
 publish_to: "none"
 
 environment:
