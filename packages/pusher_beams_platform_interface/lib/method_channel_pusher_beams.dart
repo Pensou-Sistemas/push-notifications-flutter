@@ -3,6 +3,7 @@
 // ignore_for_file: public_member_api_docs, non_constant_identifier_names, avoid_as, unused_import, unnecessary_parenthesis, prefer_null_aware_operators, omit_local_variable_types, unused_shown_name
 // @dart = 2.12
 import 'dart:async';
+import 'dart:developer';
 import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 
 import 'package:flutter/services.dart';
@@ -427,6 +428,11 @@ abstract class CallbackHandlerApi {
 }
 
 class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
+  /// Registers this implementation as the plugin instance.
+  static void registerWith() {
+    PusherBeamsPlatform.instance = AndroidPusherBeamsPlugin();
+  }
+
   /// Stores the ids and the [Function]s to call back.
   static final Map<String, Function> _callbacks = {};
 

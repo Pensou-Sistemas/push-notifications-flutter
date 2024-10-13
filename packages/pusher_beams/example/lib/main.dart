@@ -61,14 +61,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // print(await PusherBeamsPlugin.instance.getDeviceInterests());
 
     // This is not intented to use in web
-    if (!kIsWeb) {
-      await PusherBeamsPlugin.instance.setDeviceInterests(['debug-teste']);
+    // if (!kIsWeb) {
+    await PusherBeamsPlugin.instance.setDeviceInterests(['debug-teste']);
 
-      // await PusherBeamsPlugin.instance.onInterestChanges((interests) => {print('Interests: $interests')});
+    // await PusherBeamsPlugin.instance.onInterestChanges((interests) => {print('Interests: $interests')});
 
-      await PusherBeamsPlugin.instance.onMessageReceivedInTheForeground(_onMessageReceivedInTheForeground);
-      await PusherBeamsPlugin.instance.onMessageReceivedInTheBackground(_onMessageReceivedInTheBackground);
-    }
+    await PusherBeamsPlugin.instance.onMessageReceivedInTheForeground(_onMessageReceivedInTheForeground);
+    await PusherBeamsPlugin.instance.onMessageReceivedInTheBackground(_onMessageReceivedInTheBackground);
+    // }
     // await _checkForInitialMessage();
   }
 

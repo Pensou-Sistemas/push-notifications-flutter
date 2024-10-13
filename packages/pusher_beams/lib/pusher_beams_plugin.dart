@@ -11,13 +11,6 @@ class PusherBeamsPlugin {
 
   static PusherBeamsPlugin get instance => _instance;
 
-  /// Returns the underlying platform-specific implementation of given type [T],
-  /// which must be a concrete subclass of [PusherBeamsPlatform]
-  ///
-  /// Requires running on the appropriate platform that matches the specified
-  /// type for a result to be returned. For example, when the specified type
-  /// argument is of type [AndroidPusherBeamsPlugin], this will
-  /// only return a result of that type when running on Android.
   T? resolvePlatformSpecificImplementation<T extends PusherBeamsPlatform>() {
     if (T == PusherBeamsPlatform) {
       throw ArgumentError.value(
@@ -34,25 +27,16 @@ class PusherBeamsPlugin {
         PusherBeamsPlatform.instance is AndroidPusherBeamsPlugin) {
       return PusherBeamsPlatform.instance as T?;
     }
-    //  else if (defaultTargetPlatform == TargetPlatform.iOS &&
-    //     T == IOSFlutterLocalNotificationsPlugin &&
-    //     PusherBeamsPlatform.instance is IOSFlutterLocalNotificationsPlugin) {
-    //   return PusherBeamsPlatform.instance as T?;
-    // } else if (defaultTargetPlatform == TargetPlatform.macOS &&
-    //     T == MacOSFlutterLocalNotificationsPlugin &&
-    //     PusherBeamsPlatform.instance is MacOSFlutterLocalNotificationsPlugin) {
-    //   return PusherBeamsPlatform.instance as T?;
-    // } else if (defaultTargetPlatform == TargetPlatform.linux &&
-    //     T == LinuxFlutterLocalNotificationsPlugin &&
-    //     PusherBeamsPlatform.instance is LinuxFlutterLocalNotificationsPlugin) {
-    //   return PusherBeamsPlatform.instance as T?;
-    // }
 
     return null;
   }
 
   Future<bool?> start(String instanceId) async {
+    if (kIsWeb) {
+      return true;
+    }
     if (defaultTargetPlatform == TargetPlatform.android) {
+      AndroidPusherBeamsPlugin.registerWith();
       return resolvePlatformSpecificImplementation<AndroidPusherBeamsPlugin>()?.start(instanceId);
     }
     return true;
