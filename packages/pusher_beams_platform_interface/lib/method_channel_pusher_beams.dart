@@ -71,7 +71,7 @@ class PusherBeamsApi extends PusherBeamsPlatform {
   static const MessageCodec<Object?> codec = _PusherBeamsApiCodec();
 
   @override
-  Future<void> start(String instanceId) async {
+  Future<bool> start(String instanceId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.PusherBeamsApi.start', codec,
         binaryMessenger: _binaryMessenger);
@@ -89,7 +89,7 @@ class PusherBeamsApi extends PusherBeamsPlatform {
         details: error['details'],
       );
     } else {
-      return;
+      return true;
     }
   }
 
@@ -438,13 +438,6 @@ class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
   static final Map<String, Function> _callbacks = {};
 
   @override
-  Future<bool> start(String instanceId) async {
-    // await super.start(instanceId);
-    await super.start(UuidValue.fromString(instanceId).uuid);
-    return true;
-  }
-
-  @override
   Future<Map<String, dynamic>?> getInitialMessage() async {
     return await super.getInitialMessage();
   }
@@ -456,56 +449,26 @@ class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
   }
 
   @override
-  Future<void> setDeviceInterests(List<String?> interests) async {
-    await super.setDeviceInterests(interests);
-  }
-
-  @override
-  Future<void> clearDeviceInterests() async {
-    await super.clearDeviceInterests();
-  }
-
-  @override
-  Future<void> removeDeviceInterest(String interest) async {
-    await super.removeDeviceInterest(interest);
-  }
-
-  @override
-  Future<List<String?>> getDeviceInterests() async {
-    return await super.getDeviceInterests();
-  }
-
-  @override
   Future<void> clearAllState() async {
     await super.clearAllState();
     _callbacks.clear();
   }
 
-  @override
-  Future<void> addDeviceInterest(String interest) async {
-    await super.addDeviceInterest(interest);
-  }
-
   Future<void> onInterestChanging(OnInterestsChange callback) async {
     final callbackId = const Uuid().v4();
-
     _callbacks[callbackId] = callback;
-
     await super.onInterestChanges(callbackId);
   }
 
   Future<void> onDidReceiveNotificationResponse(OnMessageReceivedInTheForeground callback) async {
     final callbackId = const Uuid().v4();
-
     _callbacks[callbackId] = callback;
     await super.onMessageReceivedInTheForeground(callbackId);
   }
 
   Future<void> onDidReceiveBackgroundNotificationResponse(OnMessageReceivedInTheBackground callback) async {
     final callbackId = const Uuid().v4();
-
     _callbacks[callbackId] = callback;
-
     await super.onMessageReceivedInTheBackground(callbackId);
   }
 
@@ -555,12 +518,6 @@ class IOSPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
   static final Map<String, Function> _callbacks = {};
 
   @override
-  Future<bool> start(String instanceId) async {
-    await super.start(UuidValue.fromString(instanceId).uuid);
-    return true;
-  }
-
-  @override
   Future<Map<String, dynamic>?> getInitialMessage() async {
     return await super.getInitialMessage();
   }
@@ -574,34 +531,9 @@ class IOSPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
   }
 
   @override
-  Future<void> setDeviceInterests(List<String?> interests) async {
-    await super.setDeviceInterests(interests);
-  }
-
-  @override
-  Future<void> clearDeviceInterests() async {
-    await super.clearDeviceInterests();
-  }
-
-  @override
-  Future<void> removeDeviceInterest(String interest) async {
-    await super.removeDeviceInterest(interest);
-  }
-
-  @override
-  Future<List<String?>> getDeviceInterests() async {
-    return await super.getDeviceInterests();
-  }
-
-  @override
   Future<void> clearAllState() async {
     await super.clearAllState();
     _callbacks.clear();
-  }
-
-  @override
-  Future<void> addDeviceInterest(String interest) async {
-    await super.addDeviceInterest(interest);
   }
 
   Future<void> onInterestChanging(OnInterestsChange callback) async {

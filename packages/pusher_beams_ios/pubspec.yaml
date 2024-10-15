@@ -1,6 +1,6 @@
 name: pusher_beams_ios
 description: The iOS implementation from Pusher Beams for Flutter, intended to be a platform-specific package.
-version: 1.3.0
+version: 1.3.1
 publish_to: "none"
 
 environment:
@@ -13,9 +13,7 @@ dependencies:
     path: ../pusher_beams_platform_interface
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
-  flutter_test:
-    sdk: flutter
+  flutter_lints: ^5.0.0
 
 flutter:
   plugin:
