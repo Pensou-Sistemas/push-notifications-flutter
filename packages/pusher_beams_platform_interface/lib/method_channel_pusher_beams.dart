@@ -399,6 +399,7 @@ abstract class CallbackHandlerApi {
   static const MessageCodec<Object?> codec = _CallbackHandlerApiCodec();
 
   void handleCallback(String callbackId, String callbackName, List<Object?> args);
+
   static void setup(CallbackHandlerApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -438,7 +439,8 @@ class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
 
   @override
   Future<bool> start(String instanceId) async {
-    await super.start(instanceId);
+    // await super.start(instanceId);
+    await super.start(UuidValue.fromString(instanceId).uuid);
     return true;
   }
 
@@ -449,9 +451,7 @@ class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
 
   Future<void> setUser(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
     final callbackId = const Uuid().v4();
-
     _callbacks[callbackId] = callback;
-
     await super.setUserId(userId, provider, callbackId);
   }
 
@@ -506,6 +506,119 @@ class AndroidPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
 
     _callbacks[callbackId] = callback;
 
+    await super.onMessageReceivedInTheBackground(callbackId);
+  }
+
+  @override
+  Future<void> stop() async {
+    await super.stop();
+    _callbacks.clear();
+  }
+
+  /// Handler which receives callbacks from the native platforms.
+  /// This currently supports [onInterestChanges] and [setUserId] callbacks
+  /// but by default it just call the [Function] set.
+  ///
+  /// **You're not supposed to use this**
+  @override
+  void handleCallback(String callbackId, String callbackName, List args) {
+    final callback = _callbacks[callbackId]!;
+
+    switch (callbackName) {
+      case "onInterestChanges":
+        callback((args[0] as List<Object?>).cast<String>());
+        return;
+      case "setUserId":
+        callback(args[0] as String?);
+        return;
+      case "onMessageReceivedInTheForeground":
+        callback((args[0] as Map<Object?, Object?>));
+        return;
+      case "onMessageReceivedInTheBackground":
+        callback((args[0] as Map<Object?, Object?>));
+        return;
+      default:
+        callback();
+        return;
+    }
+  }
+}
+
+class IOSPusherBeamsPlugin extends PusherBeamsApi with CallbackHandlerApi {
+  /// Registers this implementation as the plugin instance.
+  static void registerWith() {
+    PusherBeamsPlatform.instance = AndroidPusherBeamsPlugin();
+    // CallbackHandlerApi.setup(this);
+  }
+
+  /// Stores the ids and the [Function]s to call back.
+  static final Map<String, Function> _callbacks = {};
+
+  @override
+  Future<bool> start(String instanceId) async {
+    await super.start(UuidValue.fromString(instanceId).uuid);
+    return true;
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getInitialMessage() async {
+    return await super.getInitialMessage();
+  }
+
+  Future<void> setUser(String userId, BeamsAuthProvider provider, OnUserCallback callback) async {
+    final callbackId = const Uuid().v4();
+
+    _callbacks[callbackId] = callback;
+
+    await super.setUserId(userId, provider, callbackId);
+  }
+
+  @override
+  Future<void> setDeviceInterests(List<String?> interests) async {
+    await super.setDeviceInterests(interests);
+  }
+
+  @override
+  Future<void> clearDeviceInterests() async {
+    await super.clearDeviceInterests();
+  }
+
+  @override
+  Future<void> removeDeviceInterest(String interest) async {
+    await super.removeDeviceInterest(interest);
+  }
+
+  @override
+  Future<List<String?>> getDeviceInterests() async {
+    return await super.getDeviceInterests();
+  }
+
+  @override
+  Future<void> clearAllState() async {
+    await super.clearAllState();
+    _callbacks.clear();
+  }
+
+  @override
+  Future<void> addDeviceInterest(String interest) async {
+    await super.addDeviceInterest(interest);
+  }
+
+  Future<void> onInterestChanging(OnInterestsChange callback) async {
+    final callbackId = const Uuid().v4();
+    _callbacks[callbackId] = callback;
+    await super.onInterestChanges(callbackId);
+  }
+
+  Future<void> onDidReceiveNotificationResponse(OnMessageReceivedInTheForeground callback) async {
+    final callbackId = const Uuid().v4();
+    _callbacks[callbackId] = callback;
+    await super.onMessageReceivedInTheForeground(callbackId);
+  }
+
+  Future<void> onDidReceiveBackgroundNotificationResponse(OnMessageReceivedInTheBackground callback) async {
+    final callbackId = const Uuid().v4();
+    _callbacks[callbackId] = callback;
     await super.onMessageReceivedInTheBackground(callbackId);
   }
 

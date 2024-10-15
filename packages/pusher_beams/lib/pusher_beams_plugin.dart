@@ -27,6 +27,11 @@ class PusherBeamsPlugin {
         PusherBeamsPlatform.instance is AndroidPusherBeamsPlugin) {
       return PusherBeamsPlatform.instance as T?;
     }
+    if (defaultTargetPlatform == TargetPlatform.iOS &&
+        T == IOSPusherBeamsPlugin &&
+        PusherBeamsPlatform.instance is IOSPusherBeamsPlugin) {
+      return PusherBeamsPlatform.instance as T?;
+    }
 
     return null;
   }
@@ -39,6 +44,10 @@ class PusherBeamsPlugin {
       AndroidPusherBeamsPlugin.registerWith();
       return resolvePlatformSpecificImplementation<AndroidPusherBeamsPlugin>()?.start(instanceId);
     }
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      IOSPusherBeamsPlugin.registerWith();
+      return resolvePlatformSpecificImplementation<IOSPusherBeamsPlugin>()?.start(instanceId);
+    }
     return true;
   }
 
@@ -46,11 +55,17 @@ class PusherBeamsPlugin {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return resolvePlatformSpecificImplementation<AndroidPusherBeamsPlugin>()?.setDeviceInterests(interests);
     }
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return resolvePlatformSpecificImplementation<IOSPusherBeamsPlugin>()?.setDeviceInterests(interests);
+    }
   }
 
   Future<void> clearDeviceInterests() async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return resolvePlatformSpecificImplementation<AndroidPusherBeamsPlugin>()?.clearDeviceInterests();
+    }
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return resolvePlatformSpecificImplementation<IOSPusherBeamsPlugin>()?.clearDeviceInterests();
     }
   }
 
@@ -59,11 +74,18 @@ class PusherBeamsPlugin {
       return resolvePlatformSpecificImplementation<AndroidPusherBeamsPlugin>()
           ?.onDidReceiveNotificationResponse(callback);
     }
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return resolvePlatformSpecificImplementation<IOSPusherBeamsPlugin>()?.onDidReceiveNotificationResponse(callback);
+    }
   }
 
   Future<void> onMessageReceivedInTheBackground(OnMessageReceivedInTheBackground callback) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return resolvePlatformSpecificImplementation<AndroidPusherBeamsPlugin>()
+          ?.onDidReceiveBackgroundNotificationResponse(callback);
+    }
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return resolvePlatformSpecificImplementation<IOSPusherBeamsPlugin>()
           ?.onDidReceiveBackgroundNotificationResponse(callback);
     }
   }
